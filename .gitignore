@@ -1,0 +1,18 @@
+# Terraform
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.backup
+terraform/.terraform.lock.hcl
+
+# Node
+node_modules/
+frontend/node_modules/
+backend/node_modules/
+frontend/build/
+
+# Env
+.env
+*.env
+
+# Docker
+*.log
