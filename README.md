@@ -10,6 +10,42 @@
 
 A production-ready three-tier web application deployed on Azure Kubernetes Service (AKS), built with a full DevOps pipeline including Infrastructure as Code, containerization, and CI/CD automation.
 
+The application is a Todo App split into 3 independent layers, each running in its own Docker container, orchestrated by Kubernetes on Microsoft Azure.
+
+---
+
+## Screenshots
+
+### 1. App running locally with Docker Compose
+
+![App local](screenshots/01-app-local.png)
+
+### 2. Azure login from Ubuntu CLI
+
+![Azure login](screenshots/04-azure-login-ubuntu.png)
+
+### 3. Azure infrastructure created with Terraform
+
+![Infrastructure](screenshots/06-infrastructure-created.png)
+
+### 4. Docker images pushed to Azure Container Registry
+
+![Images pushed](screenshots/05-images-pushed-acr.png)
+
+### 5. App live on Azure - First deployment
+
+![App live v1](screenshots/02-app-live-azure-v1.png)
+
+### 6. App live on Azure - Running in production
+
+![App live](screenshots/03-app-live-azure.png)
+
+### 7. CI/CD Pipeline success on GitHub Actions
+
+![Pipeline](screenshots/07-pipeline-success.png)
+
+---
+
 ## Architecture
 ```
                     Internet
@@ -34,6 +70,8 @@ A production-ready three-tier web application deployed on Azure Kubernetes Servi
 All running on Azure Kubernetes Service (AKS) - francecentral
 ```
 
+---
+
 ## Tech Stack
 
 | Layer | Technology |
@@ -43,10 +81,12 @@ All running on Azure Kubernetes Service (AKS) - francecentral
 | Database | MongoDB |
 | Containerization | Docker |
 | Orchestration | Kubernetes (AKS) |
-| Infrastructure | Terraform |
-| Registry | Azure Container Registry (ACR) |
+| Infrastructure as Code | Terraform |
+| Container Registry | Azure Container Registry (ACR) |
 | CI/CD | GitHub Actions |
 | Cloud | Microsoft Azure |
+
+---
 
 ## Project Structure
 ```
@@ -56,10 +96,10 @@ THREE-TIER-AKS-DEVOPS/
 │   │   ├── App.js
 │   │   └── App.css
 │   └── Dockerfile
-├── backend/                  # Node.js API
+├── backend/                  # Node.js REST API
 │   ├── server.js
 │   └── Dockerfile
-├── kubernetes/               # K8s manifests
+├── kubernetes/               # Kubernetes manifests
 │   ├── frontend.yml
 │   ├── backend.yml
 │   └── mongodb.yml
@@ -67,32 +107,37 @@ THREE-TIER-AKS-DEVOPS/
 │   ├── main.tf
 │   ├── variables.tf
 │   └── outputs.tf
+├── screenshots/              # Project screenshots
 └── .github/workflows/        # CI/CD Pipeline
     └── ci-cd.yml
 ```
 
+---
+
 ## Getting Started
 
 ### Prerequisites
+
 - Azure CLI
 - Terraform
 - Docker
 - kubectl
 - Node.js 20+
 
-### Clone the repo
+### 1. Clone the repo
 ```bash
 git clone https://github.com/YanisRamy/THREE-TIER-AKS-DEVOPS.git
 cd THREE-TIER-AKS-DEVOPS
 ```
 
-### Run locally with Docker Compose
+### 2. Run locally with Docker Compose
 ```bash
 docker compose up --build
 ```
+
 Visit http://localhost:3000
 
-### Deploy infrastructure on Azure
+### 3. Deploy infrastructure on Azure with Terraform
 ```bash
 cd terraform
 terraform init
@@ -100,7 +145,12 @@ terraform plan
 terraform apply
 ```
 
-### Push Docker images to ACR
+This creates:
+- A Resource Group in francecentral
+- An Azure Container Registry (ACR)
+- An AKS cluster with 2 nodes
+
+### 4. Push Docker images to ACR
 ```bash
 az acr login --name acrthreetieraks
 docker build -t acrthreetieraks.azurecr.io/frontend:v1 ./frontend
@@ -109,7 +159,7 @@ docker push acrthreetieraks.azurecr.io/frontend:v1
 docker push acrthreetieraks.azurecr.io/backend:v1
 ```
 
-### Deploy on AKS
+### 5. Deploy on AKS
 ```bash
 az aks get-credentials --resource-group rg-three-tier-aks --name aks-three-tier
 kubectl apply -f kubernetes/
@@ -117,20 +167,31 @@ kubectl get pods
 kubectl get services
 ```
 
+---
+
 ## CI/CD Pipeline
 
-Every push to main automatically:
-1. Builds Docker images
-2. Pushes to Azure Container Registry
-3. Deploys to AKS cluster
+Every push to the main branch automatically triggers the GitHub Actions pipeline which:
 
-## Azure Infrastructure (Terraform)
+1. Checks out the code
+2. Logs into Azure
+3. Logs into Azure Container Registry
+4. Builds and pushes the Frontend Docker image
+5. Builds and pushes the Backend Docker image
+6. Connects to the AKS cluster
+7. Updates the running deployments with the new images
 
-| Resource | Name | Details |
-|----------|------|---------|
-| Resource Group | rg-three-tier-aks | francecentral |
-| AKS Cluster | aks-three-tier | 2 nodes, Standard_B2s_v2 |
-| Container Registry | acrthreetieraks | Basic SKU |
+---
+
+## Azure Infrastructure
+
+| Resource | Name | Region | Details |
+|----------|------|--------|---------|
+| Resource Group | rg-three-tier-aks | francecentral | Contains all resources |
+| AKS Cluster | aks-three-tier | francecentral | 2 nodes, Standard_B2s_v2 |
+| Container Registry | acrthreetieraks | francecentral | Basic SKU |
+
+---
 
 ## Author
 
