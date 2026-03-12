@@ -14,61 +14,15 @@ The application is a Todo App split into 3 independent layers, each running in i
 
 ---
 
-## Screenshots
+## Infrastructure Diagram
 
-### 1. App running locally with Docker Compose
-
-![App local](screenshots/01-app-local.png)
-
-### 2. Azure login from Ubuntu CLI
-
-![Azure login](screenshots/04-azure-login-ubuntu.png)
-
-### 3. Azure infrastructure created with Terraform
-
-![Infrastructure](screenshots/06-infrastructure-created.png)
-
-### 4. Docker images pushed to Azure Container Registry
-
-![Images pushed](screenshots/05-images-pushed-acr.png)
-
-### 5. App live on Azure - First deployment
-
-![App live v1](screenshots/02-app-live-azure-v1.png)
-
-### 6. App live on Azure - Running in production
-
-![App live](screenshots/03-app-live-azure.png)
-
-### 7. CI/CD Pipeline success on GitHub Actions
-
-![Pipeline](screenshots/07-pipeline-success.png)
+![Infrastructure Diagram](screenshots/infrastructure-diagram.svg)
 
 ---
 
-## Architecture
-```
-                    Internet
-                       |
-               [Load Balancer]
-                       |
-              +-----------------+
-              |    FRONTEND     |  React.js (Nginx)
-              |   2 replicas    |  Port 80
-              +--------+--------+
-                       |
-              +-----------------+
-              |    BACKEND      |  Node.js + Express
-              |   2 replicas    |  Port 5000
-              +--------+--------+
-                       |
-              +-----------------+
-              |    DATABASE     |  MongoDB
-              |   1 replica     |  Port 27017
-              +-----------------+
+## CI/CD Workflow Diagram
 
-All running on Azure Kubernetes Service (AKS) - francecentral
-```
+![Workflow Diagram](screenshots/workflow-diagram.svg)
 
 ---
 
@@ -107,7 +61,7 @@ THREE-TIER-AKS-DEVOPS/
 │   ├── main.tf
 │   ├── variables.tf
 │   └── outputs.tf
-├── screenshots/              # Project screenshots
+├── screenshots/              # Project screenshots and diagrams
 └── .github/workflows/        # CI/CD Pipeline
     └── ci-cd.yml
 ```
@@ -190,6 +144,31 @@ Every push to the main branch automatically triggers the GitHub Actions pipeline
 | Resource Group | rg-three-tier-aks | francecentral | Contains all resources |
 | AKS Cluster | aks-three-tier | francecentral | 2 nodes, Standard_B2s_v2 |
 | Container Registry | acrthreetieraks | francecentral | Basic SKU |
+
+---
+
+## Screenshots
+
+### App running locally with Docker Compose
+![App local](screenshots/01-app-local.png)
+
+### Azure login from Ubuntu CLI
+![Azure login](screenshots/04-azure-login-ubuntu.png)
+
+### Azure infrastructure created with Terraform
+![Infrastructure](screenshots/06-infrastructure-created.png)
+
+### Docker images pushed to Azure Container Registry
+![Images pushed](screenshots/05-images-pushed-acr.png)
+
+### App live on Azure - First deployment
+![App live v1](screenshots/02-app-live-azure-v1.png)
+
+### App live on Azure - Running in production
+![App live](screenshots/03-app-live-azure.png)
+
+### CI/CD Pipeline success on GitHub Actions
+![Pipeline](screenshots/07-pipeline-success.png)
 
 ---
 
